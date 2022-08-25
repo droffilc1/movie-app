@@ -1,34 +1,34 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useEffect, useState } from 'react';
+import { NavBar } from './components';
+import { MovieList } from './components';
+import { Footer } from './components'
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [movies, setMovies] = useState([]);
+  const [movieCategory, setMovieCategory] = useState('popular');
+
+  const API_KEY = import.meta.env.VITE_API_KEY;
+  const API_URL = `https://api.themoviedb.org/3/movie/${movieCategory}?api_key=${API_KEY}`;
+  7;
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      const data = await fetch(API_URL);
+      const movies = await data.json();
+
+      setMovies(movies.results);
+    };
+    fetchMovies();
+  }, [movieCategory]);
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
-}
+    <>
+      <NavBar setMovieCategory={setMovieCategory} />
+      <MovieList movies={movies} />
+      <Footer />
+    </>
+  );
+};
 
-export default App
+export default App;
